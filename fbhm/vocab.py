@@ -62,6 +62,7 @@ class Vocab():
 		pickle.dump([self.word2idx, self.wordmatrix], open(path, 'wb'))
 		print("word2idx, wordmatrix dumped to %s "%path) 
 
+
 	def loadfiles(self, filename): 
 		assert osp.isfile(osp.join(self.root_dir, filename)),"%s does not exist"%filename
 		path = osp.join(self.root_dir, filename) 

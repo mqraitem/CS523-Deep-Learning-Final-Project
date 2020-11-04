@@ -18,7 +18,7 @@ class MainModel(nn.Module):
     self.classifier_layers = [
       weight_norm(nn.Linear(num_hidden, num_hidden),dim=None),
       nn.ReLU(),  
-      weight_norm(nn.Linear(num_hidden, 2),dim=None),
+      weight_norm(nn.Linear(num_hidden, 1),dim=None),
     ] 
 
     self.classifier = nn.Sequential(*self.classifier_layers)
@@ -43,9 +43,9 @@ class MainModel(nn.Module):
     return out 
 
 
-def build_main_model(dataset, num_hidden):
-  language_model = LanguageModel(dataset.num_tokens, dataset.token_dim, num_hidden)
-  main_model = MainModel(language_model, dataset.vision_dim, dataset.token_dim, num_hidden) 
+def build_main_model(num_hidden, num_tokens):
+  language_model = LanguageModel(num_tokens, 300, num_hidden)
+  main_model = MainModel(language_model, 2048, 300, num_hidden) 
   
   return main_model
 
