@@ -5,19 +5,22 @@ from torch.nn.utils.weight_norm import weight_norm
 from fc_net import FCNet  
 from language_model import LanguageModel
 from attention import Attention 
+from vision_model import VisionModel 
 
 class MainModel(nn.Module): 
-  def __init__(self, language_model, vision_dim, token_dim, num_hidden):  
+  def __init__(self, language_model, vision_model, vision_dim, token_dim, num_hidden, dropout):  
     super(MainModel, self).__init__() 
     self.language_model = language_model
+    self.vision_model = vision_model 
     self.attention = Attention(vision_dim, token_dim, num_hidden)
 
-    self.vision_fcnet = FCNet([vision_dim, num_hidden], nn.ReLU())
-    self.text_fcnet = FCNet([token_dim, num_hidden], nn.ReLU()) 
+    self.vision_fcnet = FCNet([vision_dim, num_hidden], nn.ReLU(), 0.4)
+    self.text_fcnet = FCNet([token_dim, num_hidden], nn.ReLU(), 0.4) 
 
     self.classifier_layers = [
       weight_norm(nn.Linear(num_hidden, num_hidden),dim=None),
       nn.ReLU(),  
+      nn.Dropout(dropout, inplace=True),
       weight_norm(nn.Linear(num_hidden, 1),dim=None),
     ] 
 
@@ -30,7 +33,8 @@ class MainModel(nn.Module):
     '''
        
     meme_feat = self.language_model(words_feat) 
-
+    vision_feat = self.vision_model(vision_feat)
+  
     attention_weights = self.attention(vision_feat, meme_feat) #[batches, num_obj] 
     vision_feat = (attention_weights * vision_feat).sum(1)
     
@@ -38,14 +42,17 @@ class MainModel(nn.Module):
     meme_feat = self.text_fcnet(meme_feat) 
 
     combined_feat = vision_feat * meme_feat
+    #combined_feat = vision_feat
     out = self.classifier(combined_feat)  
       
     return out 
 
 
-def build_main_model(num_hidden, num_tokens):
-  language_model = LanguageModel(num_tokens, 300, num_hidden)
-  main_model = MainModel(language_model, 2048, 300, num_hidden) 
+def build_main_model(num_hidden, num_tokens, vocab, dropout):
+  language_model = LanguageModel(num_tokens, 25, num_hidden)
+  vision_model = VisionModel(2048, 2048) 
+  language_model.init_embed(vocab.wordmatrix)
+  main_model = MainModel(language_model, vision_model, 2048, 25, num_hidden, dropout) 
   
   return main_model
 

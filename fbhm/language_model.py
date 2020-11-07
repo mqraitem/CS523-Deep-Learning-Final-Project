@@ -11,8 +11,16 @@ from attention import Attention
 class LanguageModel(nn.Module): 
   def __init__(self, num_tokens, token_dim, num_hidden): 
     super(LanguageModel, self).__init__() 
-    self.embed = nn.Embedding(num_tokens, token_dim)
+    self.embed = nn.Embedding(num_tokens, token_dim, padding_idx=0)
     self.attention = Attention(token_dim, token_dim, num_hidden) 
+    self.num_tokens = num_tokens 
+    self.token_dim = token_dim 
+
+  def init_embed(self, loaded_embed): 
+    loaded_embed = torch.from_numpy(loaded_embed)
+    self.embed.weight.data = loaded_embed
+    #self.embed.weight.requires_grad=False
+    print("Embedding initialized")
 
   def forward(self, words_feat): 
     words_rep = self.embed(words_feat)

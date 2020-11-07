@@ -15,13 +15,18 @@ from torchvision import transforms, utils
 import json 
 from vocab import Vocab
 from tqdm import tqdm
-
+import pickle
 #import cv2
 
 class FbDataset(Dataset): 
-  def __init__(self, json_file, root_dir, vocab):
+  def __init__(self, dataset, root_dir, vocab):
     self.root_dir = root_dir
-    self.meme_data = pd.read_json(osp.join(root_dir, json_file), lines=True) 
+    self.meme_data = pd.read_json(osp.join(root_dir, dataset+'.jsonl'), lines=True) 
+    self.img_features = np.load(osp.join(root_dir, 'img_features_%s.npy'%dataset))
+    
+    with open(osp.join(root_dir, 'img2idx_%s.pkl'%dataset), 'rb') as handle:
+      self.img2idx = pickle.load(handle)
+    
     self.entries = [] 
     self.vocab = vocab
     self.max_length = 15
@@ -32,16 +37,15 @@ class FbDataset(Dataset):
 
   def add_entry(self, meme_entry):
     meme_id =  meme_entry['img'].split(".")[0].split("/")[1]
-    imf_filename = meme_id + ".npz" 
+    meme_text = meme_entry['text'] 
+    meme_label = np.array(meme_entry['label']).astype(np.float)
+    meme_img_feature = self.img_features[self.img2idx[meme_id]]  
    
-    img_feature = np.load(osp.join(self.root_dir, 'img_features', imf_filename))  
-    img_feature = img_feature["x"] 
-
     entry = { 
         'id': meme_id,
-        'text': meme_entry['text'], 
-        'label': meme_entry['label'],
-        'img_feature': img_feature
+        'text': meme_text, 
+        'label': meme_label,
+        'img_feature': meme_img_feature
       }
       
     self.entries.append(entry)
@@ -59,10 +63,10 @@ class FbDataset(Dataset):
       meme_tokens = meme_tokens[:self.max_length]  
       if len(meme_tokens) < self.max_length: 
         padding = [self.vocab.padding_word_idx()] * (self.max_length - len(meme_tokens)) 
-        meme_tokens = padding + meme_tokens
+        meme_tokens = meme_tokens + padding
         
       assert len(meme_tokens) == self.max_length, "meme text size is not %d"%self.max_length
-      entry['text_tokens'] = meme_tokens 
+      entry['text_tokens'] = np.array(meme_tokens) 
 
   def __len__(self): 
     return len(self.entries) 
