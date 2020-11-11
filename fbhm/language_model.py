@@ -19,13 +19,14 @@ class LanguageModel(nn.Module):
   def init_embed(self, loaded_embed): 
     loaded_embed = torch.from_numpy(loaded_embed)
     self.embed.weight.data = loaded_embed
-    #self.embed.weight.requires_grad=False
+    self.embed.weight.requires_grad=False
     print("Embedding initialized")
 
   def forward(self, words_feat): 
+    mask = words_feat == 0 
     words_rep = self.embed(words_feat)
     context = torch.mean(words_rep, dim = 1)
-    attention_weights = self.attention(words_rep, context)
+    attention_weights = self.attention(words_rep, context, mask)
     words_rep = (attention_weights * words_rep).sum(1) 
     return words_rep   
 

@@ -1,0 +1,73 @@
+MainModel(
+  (language_model): LanguageModel(
+    (embed): Embedding(1, 200, padding_idx=0)
+    (attention): Attention(
+      (linear1): Linear(in_features=400, out_features=500, bias=True)
+      (linear2): Linear(in_features=500, out_features=1, bias=True)
+      (relu): ReLU()
+      (softmax): Softmax(dim=1)
+    )
+  )
+  (vision_model): VisionModel(
+    (fc_layers): FCNet(
+      (main): Sequential(
+        (0): Linear(in_features=2048, out_features=2048, bias=True)
+        (1): ReLU()
+        (2): Dropout(p=0.2, inplace=True)
+        (3): Linear(in_features=2048, out_features=2048, bias=True)
+        (4): ReLU()
+        (5): Dropout(p=0.2, inplace=False)
+      )
+    )
+  )
+  (attention): Attention(
+    (linear1): Linear(in_features=2248, out_features=500, bias=True)
+    (linear2): Linear(in_features=500, out_features=1, bias=True)
+    (relu): ReLU()
+    (softmax): Softmax(dim=1)
+  )
+  (vision_fcnet): FCNet(
+    (main): Sequential(
+      (0): Linear(in_features=2048, out_features=500, bias=True)
+      (1): ReLU()
+      (2): Dropout(p=0.5, inplace=False)
+    )
+  )
+  (text_fcnet): FCNet(
+    (main): Sequential(
+      (0): Linear(in_features=200, out_features=500, bias=True)
+      (1): ReLU()
+      (2): Dropout(p=0.5, inplace=True)
+      (3): Linear(in_features=500, out_features=500, bias=True)
+      (4): ReLU()
+      (5): Dropout(p=0.5, inplace=True)
+      (6): Linear(in_features=500, out_features=500, bias=True)
+      (7): ReLU()
+      (8): Dropout(p=0.5, inplace=True)
+      (9): Linear(in_features=500, out_features=500, bias=True)
+      (10): ReLU()
+      (11): Dropout(p=0.5, inplace=False)
+    )
+  )
+  (classifier): Sequential(
+    (0): Linear(in_features=500, out_features=500, bias=True)
+    (1): ReLU()
+    (2): Dropout(p=0.5, inplace=False)
+    (3): Linear(in_features=500, out_features=1, bias=True)
+  )
+)
+Epoch 0 | Train Loss 0.016892, Train acc 0.75, Train aoc 0.79 | Valid Loss 0.022626 Valid acc 0.56, Valid aoc 0.63
+Epoch 1 | Train Loss 0.015692, Train acc 0.76, Train aoc 0.81 | Valid Loss 0.025070 Valid acc 0.56, Valid aoc 0.62
+Epoch 2 | Train Loss 0.015346, Train acc 0.76, Train aoc 0.83 | Valid Loss 0.024740 Valid acc 0.54, Valid aoc 0.63
+Epoch 3 | Train Loss 0.014370, Train acc 0.78, Train aoc 0.85 | Valid Loss 0.024947 Valid acc 0.58, Valid aoc 0.64
+Epoch 4 | Train Loss 0.013784, Train acc 0.79, Train aoc 0.86 | Valid Loss 0.027513 Valid acc 0.55, Valid aoc 0.63
+Epoch 5 | Train Loss 0.013604, Train acc 0.80, Train aoc 0.87 | Valid Loss 0.034984 Valid acc 0.55, Valid aoc 0.62
+Epoch 6 | Train Loss 0.012564, Train acc 0.81, Train aoc 0.89 | Valid Loss 0.029407 Valid acc 0.56, Valid aoc 0.64
+Epoch 7 | Train Loss 0.012400, Train acc 0.80, Train aoc 0.90 | Valid Loss 0.033644 Valid acc 0.55, Valid aoc 0.63
+Epoch 8 | Train Loss 0.012986, Train acc 0.82, Train aoc 0.90 | Valid Loss 0.025406 Valid acc 0.56, Valid aoc 0.61
+Epoch 9 | Train Loss 0.011570, Train acc 0.83, Train aoc 0.91 | Valid Loss 0.032365 Valid acc 0.56, Valid aoc 0.62
+Epoch 10 | Train Loss 0.011348, Train acc 0.83, Train aoc 0.91 | Valid Loss 0.031435 Valid acc 0.56, Valid aoc 0.63
+Epoch 11 | Train Loss 0.010712, Train acc 0.83, Train aoc 0.92 | Valid Loss 0.035026 Valid acc 0.58, Valid aoc 0.62
+Epoch 12 | Train Loss 0.010301, Train acc 0.83, Train aoc 0.92 | Valid Loss 0.044758 Valid acc 0.56, Valid aoc 0.62
+Epoch 13 | Train Loss 0.009945, Train acc 0.84, Train aoc 0.93 | Valid Loss 0.043808 Valid acc 0.56, Valid aoc 0.61
+Epoch 14 | Train Loss 0.010128, Train acc 0.84, Train aoc 0.93 | Valid Loss 0.043820 Valid acc 0.55, Valid aoc 0.61

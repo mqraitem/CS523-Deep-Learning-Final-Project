@@ -6,7 +6,7 @@
 import torch
 import torch.nn as nn
 from torch.nn.utils.weight_norm import weight_norm
-
+import numpy as np
 
 class Attention(nn.Module):
   def __init__(self, query_dim, context_dim, num_hidden):
@@ -21,7 +21,7 @@ class Attention(nn.Module):
     self.relu = torch.nn.ReLU() 
     self.softmax = torch.nn.Softmax(dim=1) 
 
-  def forward(self, query, context): 
+  def forward(self, query, context, mask=None): 
     '''   
       query shape   = [batch_size, K, query_dim] 
       context shape = [batch_size,  context_dim] 
@@ -32,6 +32,9 @@ class Attention(nn.Module):
     cq = self.linear1(cq)
     cq = self.relu(cq) 
     attention_weights = self.linear2(cq)
+    if mask is not None: 
+      attention_weights[mask] = -np.inf
+    
     attention_weights = self.softmax(attention_weights)     
     return attention_weights
     

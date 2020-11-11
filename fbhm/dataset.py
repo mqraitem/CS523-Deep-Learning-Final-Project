@@ -19,11 +19,11 @@ import pickle
 #import cv2
 
 class FbDataset(Dataset): 
-  def __init__(self, dataset, root_dir, vocab):
+  def __init__(self, dataset, root_dir, vocab, mode='train'):
     self.root_dir = root_dir
     self.meme_data = pd.read_json(osp.join(root_dir, dataset+'.jsonl'), lines=True) 
     self.img_features = np.load(osp.join(root_dir, 'img_features_%s.npy'%dataset))
-    
+    self.mode = mode 
     with open(osp.join(root_dir, 'img2idx_%s.pkl'%dataset), 'rb') as handle:
       self.img2idx = pickle.load(handle)
     
@@ -36,18 +36,22 @@ class FbDataset(Dataset):
     self.tokenize() 
 
   def add_entry(self, meme_entry):
-    meme_id =  meme_entry['img'].split(".")[0].split("/")[1]
+    image_id =  meme_entry['img'].split(".")[0].split("/")[1]
     meme_text = meme_entry['text'] 
-    meme_label = np.array(meme_entry['label']).astype(np.float)
-    meme_img_feature = self.img_features[self.img2idx[meme_id]]  
-   
+    meme_img_feature = self.img_features[self.img2idx[image_id]]  
+    meme_id = meme_entry['id'] 
+
     entry = { 
-        'id': meme_id,
+        'id':meme_id,
+        'imag_id': image_id,
         'text': meme_text, 
-        'label': meme_label,
         'img_feature': meme_img_feature
       }
-      
+    
+    if self.mode == 'train': 
+      meme_label = np.array(meme_entry['label']).astype(np.float)
+      entry['label'] = meme_label 
+
     self.entries.append(entry)
 
   def load_data(self): 
@@ -68,6 +72,7 @@ class FbDataset(Dataset):
       assert len(meme_tokens) == self.max_length, "meme text size is not %d"%self.max_length
       entry['text_tokens'] = np.array(meme_tokens) 
 
+
   def __len__(self): 
     return len(self.entries) 
 
@@ -76,18 +81,18 @@ class FbDataset(Dataset):
     entry_id = str(entry['id'])
     entry_tokens = entry['text_tokens']
     entry_text   = entry['text']  
-    entry_label  = entry['label'] 
     entry_img_feature = entry['img_feature']    
   
-    #print(entry_img_feature)
-
     sample = { 
       'id'    : entry_id, 
       'tokens': entry_tokens, 
       'text'  : entry_text, 
       'img_feature' : entry_img_feature, 
-      'label' : entry_label 
     } 
+
+    if self.mode == 'train': 
+      entry_label  = entry['label'] 
+      sample['label'] = entry_label 
 
     return sample 
 

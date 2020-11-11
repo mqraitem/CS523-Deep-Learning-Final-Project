@@ -61,7 +61,11 @@ class Vocab():
       if word in self.word2idx:
         idx = self.word2idx[word] 
         self.wordmatrix[idx] = emb  
+    
+    nonzero = np.count_nonzero(np.count_nonzero(self.wordmatrix, axis=-1)) 
+    print("Glove embedding covers %.2f of the dataset"%(nonzero/len(self.wordmatrix))) 
 
+  
   def dumpfiles(self, filename):
     path = osp.join(self.root_dir, filename)  
     pickle.dump([self.word2idx, self.wordmatrix], open(path, 'wb'))

@@ -1,0 +1,59 @@
+MainModel(
+  (language_model): LanguageModel(
+    (embed): Embedding(1, 25, padding_idx=0)
+    (attention): Attention(
+      (linear1): Linear(in_features=50, out_features=500, bias=True)
+      (linear2): Linear(in_features=500, out_features=1, bias=True)
+      (relu): ReLU()
+      (softmax): Softmax(dim=1)
+    )
+  )
+  (vision_model): VisionModel(
+    (fc_layers): FCNet(
+      (main): Sequential(
+        (0): Linear(in_features=2048, out_features=2048, bias=True)
+        (1): ReLU()
+        (2): Dropout(p=0.2, inplace=True)
+        (3): Linear(in_features=2048, out_features=2048, bias=True)
+        (4): ReLU()
+        (5): Dropout(p=0.2, inplace=False)
+      )
+    )
+  )
+  (attention): Attention(
+    (linear1): Linear(in_features=2073, out_features=500, bias=True)
+    (linear2): Linear(in_features=500, out_features=1, bias=True)
+    (relu): ReLU()
+    (softmax): Softmax(dim=1)
+  )
+  (vision_fcnet): FCNet(
+    (main): Sequential(
+      (0): Linear(in_features=2048, out_features=500, bias=True)
+      (1): ReLU()
+      (2): Dropout(p=0.5, inplace=False)
+    )
+  )
+  (text_fcnet): FCNet(
+    (main): Sequential(
+      (0): Linear(in_features=25, out_features=500, bias=True)
+      (1): ReLU()
+      (2): Dropout(p=0.5, inplace=True)
+      (3): Linear(in_features=500, out_features=500, bias=True)
+      (4): ReLU()
+      (5): Dropout(p=0.5, inplace=True)
+      (6): Linear(in_features=500, out_features=500, bias=True)
+      (7): ReLU()
+      (8): Dropout(p=0.5, inplace=True)
+      (9): Linear(in_features=500, out_features=500, bias=True)
+      (10): ReLU()
+      (11): Dropout(p=0.5, inplace=False)
+    )
+  )
+  (classifier): Sequential(
+    (0): Linear(in_features=500, out_features=500, bias=True)
+    (1): ReLU()
+    (2): Dropout(p=0.5, inplace=False)
+    (3): Linear(in_features=500, out_features=1, bias=True)
+  )
+)
+Epoch 0 | Train Loss 0.017957, Train acc 0.72, Train aoc 0.73 | Valid Loss 0.025163 Valid acc 0.54, Valid aoc 0.59

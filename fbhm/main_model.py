@@ -14,14 +14,16 @@ class MainModel(nn.Module):
     self.vision_model = vision_model 
     self.attention = Attention(vision_dim, token_dim, num_hidden)
 
-    self.vision_fcnet = FCNet([vision_dim, num_hidden], nn.ReLU(), 0.4)
-    self.text_fcnet = FCNet([token_dim, num_hidden], nn.ReLU(), 0.4) 
+    self.vision_fcnet = FCNet([vision_dim, num_hidden], dropout)
+    self.text_fcnet = FCNet([token_dim, num_hidden, num_hidden, num_hidden, num_hidden], dropout) 
 
     self.classifier_layers = [
-      weight_norm(nn.Linear(num_hidden, num_hidden),dim=None),
+      #weight_norm(nn.Linear(num_hidden, num_hidden),dim=None),
+      nn.Linear(num_hidden, num_hidden),
       nn.ReLU(),  
-      nn.Dropout(dropout, inplace=True),
-      weight_norm(nn.Linear(num_hidden, 1),dim=None),
+      nn.Dropout(dropout),
+      #weight_norm(nn.Linear(num_hidden, 1),dim=None),
+      nn.Linear(num_hidden, 1) 
     ] 
 
     self.classifier = nn.Sequential(*self.classifier_layers)
@@ -42,17 +44,17 @@ class MainModel(nn.Module):
     meme_feat = self.text_fcnet(meme_feat) 
 
     combined_feat = vision_feat * meme_feat
-    #combined_feat = vision_feat
+    #combined_feat = meme_feat
     out = self.classifier(combined_feat)  
       
     return out 
 
 
-def build_main_model(num_hidden, num_tokens, vocab, dropout):
-  language_model = LanguageModel(num_tokens, 25, num_hidden)
-  vision_model = VisionModel(2048, 2048) 
+def build_main_model(num_hidden, num_tokens, vocab, dropout, text_dim, vision_dim):
+  language_model = LanguageModel(num_tokens, text_dim, num_hidden)
+  vision_model = VisionModel(vision_dim, vision_dim) 
   language_model.init_embed(vocab.wordmatrix)
-  main_model = MainModel(language_model, vision_model, 2048, 25, num_hidden, dropout) 
+  main_model = MainModel(language_model, vision_model, vision_dim, text_dim, num_hidden, dropout) 
   
   return main_model
 
