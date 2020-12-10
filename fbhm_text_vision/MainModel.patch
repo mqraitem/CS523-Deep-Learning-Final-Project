@@ -1,0 +1,13 @@
+--- /projectnb2/ec523/mqraitem/language_vision_classification-/fbhm/main_model.py
++++ /projectnb2/ec523/mqraitem/language_vision_classification-/fbhm/main_model.py
+@@ -34,8 +34,8 @@
+     vision_feat = self.vision_fcnet(vision_feat) 
+     meme_feat = self.text_fcnet(meme_feat) 
+ 
+-    combined_feat = vision_feat * meme_feat
+-    #combined_feat = meme_feat
++    #combined_feat = vision_feat * meme_feat
++    combined_feat = meme_feat
+     out = self.classifier(combined_feat)  
+       
+     return out 
