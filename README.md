@@ -1,4 +1,4 @@
-# facebok_hateful_memes
+# CS523 Final Project
 Challenge link: [link](https://www.drivendata.org/competitions/64/hateful-memes/page/205/)
 
 ### Data:
