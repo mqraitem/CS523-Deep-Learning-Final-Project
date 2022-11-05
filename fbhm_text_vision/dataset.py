@@ -103,12 +103,6 @@ def main():
   fbdataset = FbDataset('train.jsonl', root_path, vocab) 
   for i in range(len(fbdataset)): 
     sample = fbdataset[i]
-    #print(sample['id'])
-    #print(sample['tokens']) 
-    #print(sample['text']) 
-    #cv2.imshow('image',sample['img'])
-    #cv2.waitKey(0)
-    #cv2.destroyAllWindows()  
 
 if __name__ == "__main__":
   main()

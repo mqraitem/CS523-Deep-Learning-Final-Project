@@ -2,12 +2,9 @@
   * Maan Qraitem
 '''
 
-
-
 import torch 
 import torch.nn as nn 
 from fc_net import FCNet
-
 
 class VisionModel(nn.Module): 
   def __init__(self, vision_dim, num_hidden): 
@@ -18,6 +15,5 @@ class VisionModel(nn.Module):
     xn = torch.norm(x, p=2, dim=-1).detach()
     x = x.div(xn.unsqueeze(dim=-1))
     return x
-    #return self.fc_layers(x) 
 
   

@@ -28,11 +28,6 @@ class LanguageModel(nn.Module):
     context = torch.mean(words_rep, dim = 1)
     attention_weights = self.attention(words_rep, context, mask)
     words_rep = (attention_weights * words_rep).sum(1)
-    #rep_norm = torch.norm(words_rep, p=2, dim=-1).detach() 
-    #words_rep = words_rep.div(rep_norm.unsqueeze(dim=-1))
-    #print(rep_norm)
-    #print(words_rep[0]) 
-    #quit()
     return words_rep   
 
 

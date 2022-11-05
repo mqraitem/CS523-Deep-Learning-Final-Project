@@ -41,7 +41,6 @@ class Attention(nn.Module):
     attention_weights = self.softmax(attention_weights)
     return attention_weights
 
-
 def main():
   attention = Attention(2, 2, 3)
   query = torch.randn(10, 4, 2)

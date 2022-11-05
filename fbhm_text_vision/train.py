@@ -119,8 +119,6 @@ def train(train_loader, valid_loader, model, epochs, model_dir, model_name, logg
     print(stats)
 
     if valid_stats['aoc'] > best_vald_loss: 
-      #model_filename = "epoch_%d_valid_loss_%.4f_weights"%(epoch, valid_stats['loss']) 
-      #torch.save(model.state_dict(), osp.join(model_dir, model_name, model_filename))
       model_filename = "epoch_%d_valid_loss_%.4f_full"%(epoch, valid_stats['loss']) 
       torch.save(model, osp.join(model_dir, model_name, model_filename))
       print("Saved model: %s"% model_filename) 
